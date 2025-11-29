@@ -36,6 +36,10 @@ if ($Dev) {
     Pop-Location
     
     Write-Host "[2/3] Building Backend..." -ForegroundColor Cyan
+    
+    # Activate venv
+    & ".\venv\Scripts\Activate.ps1"
+    
     # Create spec file if it doesn't exist
     if (-not (Test-Path "jira_logger.spec")) {
         Write-Host "Creating PyInstaller spec file..." -ForegroundColor White
@@ -102,19 +106,17 @@ exe = EXE(
         Set-Content -Path "jira_logger.spec" -Value $specContent
     }
     
-    pyinstaller jira_logger.spec --clean --noconfirm
+    & ".\venv\Scripts\pyinstaller.exe" jira_logger.spec --clean --noconfirm
     
     Write-Host "[3/3] Packaging Electron App..." -ForegroundColor Cyan
     
     # Copy files to electron
-    $backendDest = "electron\backend"
     $rendererDest = "electron\renderer"
     
-    New-Item -ItemType Directory -Force -Path $backendDest | Out-Null
     New-Item -ItemType Directory -Force -Path $rendererDest | Out-Null
     
-    # Copy backend exe
-    Copy-Item "dist\jira_logger.exe" $backendDest -Force
+    # Copy backend exe to electron root (will be copied next to .exe)
+    Copy-Item "dist\jira_logger.exe" "electron\" -Force
     
     # Copy frontend build
     Copy-Item -Recurse -Force "frontend\dist\*" $rendererDest

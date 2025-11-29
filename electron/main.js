@@ -8,13 +8,13 @@ let backendProcess;
 
 // Get paths for packaged vs dev
 const isDev = !app.isPackaged;
-const appPath = isDev ? __dirname : process.resourcesPath;
+const appPath = isDev ? __dirname : path.dirname(app.getPath('exe'));
 const backendPath = isDev 
-  ? path.join(appPath, '..') 
-  : path.join(appPath, 'backend');
+  ? path.join(__dirname, '..') 
+  : appPath;
 const frontendPath = isDev
-  ? path.join(appPath, '..', 'frontend', 'dist')
-  : path.join(appPath, 'renderer');
+  ? path.join(__dirname, '..', 'frontend', 'dist')
+  : path.join(process.resourcesPath, 'renderer');
 
 // Check if .env exists
 function checkEnvFile() {
@@ -34,14 +34,14 @@ function startBackend() {
 
     const backendExe = isDev
       ? 'python'
-      : path.join(backendPath, 'jira_logger.exe');
+      : path.join(appPath, 'jira_logger.exe');
 
     const args = isDev
       ? ['-m', 'uvicorn', 'app.main:app', '--host', '127.0.0.1', '--port', '8000']
       : [];
 
     const options = {
-      cwd: backendPath,
+      cwd: isDev ? backendPath : appPath,
       env: { ...process.env }
     };
 

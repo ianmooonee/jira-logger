@@ -17,7 +17,16 @@
       "main.js",
       "preload.js",
       "renderer/**/*",
-      "backend/**/*"
+      "jira_logger.exe"
+    ],
+    "asarUnpack": [
+      "jira_logger.exe"
+    ],
+    "extraResources": [
+      {
+        "from": "../.env.example",
+        "to": ".env.example"
+      }
     ],
     "win": {
       "target": "nsis",
@@ -27,7 +36,8 @@
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "createStartMenuShortcut": true
+      "createStartMenuShortcut": true,
+      "include": "installer.nsh"
     }
   },
   "dependencies": {

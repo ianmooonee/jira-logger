@@ -186,6 +186,17 @@ frontend/dist/
 frontend/dist-ssr/
 frontend/.vite/
 
+# Electron
+electron/dist/
+electron/node_modules/
+electron/renderer/
+electron/jira_logger.exe
+
+# PyInstaller
+dist/
+build/
+*.spec
+
 # Database & Cache
 data/
 *.db
