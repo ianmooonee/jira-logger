@@ -190,11 +190,10 @@ app.whenReady().then(async () => {
       'Please check your .env configuration and try again.'
     );
     app.quit();
-// IPC handlers
-ipcMain.handle('check-env', () => {
-  const envCheck = checkAndCreateEnvFile();
-  return envCheck.exists;
-});Quit when all windows are closed
+  }
+});
+
+// Quit when all windows are closed
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
@@ -216,5 +215,6 @@ app.on('activate', () => {
 
 // IPC handlers
 ipcMain.handle('check-env', () => {
-  return checkEnvFile();
+  const envCheck = checkAndCreateEnvFile();
+  return envCheck.exists;
 });
