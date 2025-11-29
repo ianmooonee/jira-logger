@@ -14,7 +14,7 @@ def get_jira_service() -> JiraService:
     if not settings.jira_pat:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="JIRA PAT not configured. Please set JIRA_PAT in .env file."
+            detail="JIRA PAT not configured. Please set jira_pat in config.json file."
         )
     
     try:

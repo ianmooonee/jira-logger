@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "publish": "electron-builder --publish always"
   },
   "build": {
     "appId": "com.jiralogger.app",
@@ -17,16 +18,12 @@
       "main.js",
       "preload.js",
       "renderer/**/*",
-      "jira_logger.exe"
+      "jira_logger.exe",
+      "config.template.json"
     ],
     "asarUnpack": [
-      "jira_logger.exe"
-    ],
-    "extraResources": [
-      {
-        "from": "../.env.example",
-        "to": ".env.example"
-      }
+      "jira_logger.exe",
+      "config.template.json"
     ],
     "win": {
       "target": "nsis",
@@ -38,10 +35,18 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "include": "installer.nsh"
-    }
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "ianmooonee",
+        "repo": "jira-logger"
+      }
+    ]
   },
   "dependencies": {
-    "electron-store": "^8.1.0"
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.6.2"
   },
   "devDependencies": {
     "electron": "^28.0.0",

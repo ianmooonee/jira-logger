@@ -1,0 +1,14 @@
+{
+  "jira_domain": "https://your-jira-instance.com",
+  "jira_pat": "your-personal-access-token-here",
+  "jira_max_results": 500,
+  "jira_timeout": 30,
+  "default_excel_path": "C:\\Users\\YourUsername\\Downloads\\tracker.xlsx",
+  "excel_sheet_name": "Daily",
+  "debug": false,
+  "secret_key": "change-this-to-random-string",
+  "api_prefix": "/api/v1",
+  "cors_origins": ["http://localhost:3000", "http://localhost:5173"],
+  "log_level": "INFO",
+  "log_format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+}

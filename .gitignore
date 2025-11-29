@@ -128,13 +128,15 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Configuration (contains secrets)
+config.json
 
 # Spyder project settings
 .spyderproject
@@ -219,3 +221,9 @@ Desktop.ini
 *.xlsx
 !example.xlsx
 uploads/
+
+# Documentation (local only)
+GIT_WORKFLOW.md
+RELEASE.md
+HOW_TO_RELEASE.md
+test_exe.py

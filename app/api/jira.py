@@ -39,6 +39,7 @@ async def get_tasks(
             tasks = [
                 t for t in tasks
                 if filter_keyword.lower() in t.summary.lower()
+                or filter_keyword.lower() in t.key.lower()
             ]
         
         # Apply sorting

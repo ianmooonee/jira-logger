@@ -4,6 +4,13 @@ import sys
 import os
 import logging
 
+# CRITICAL: Clear JIRA environment variables BEFORE any app imports
+# This prevents environment variables from overriding config.json
+for key in list(os.environ.keys()):
+    if key.startswith('JIRA_'):
+        print(f"[STARTUP] Clearing environment variable: {key}")
+        del os.environ[key]
+
 # Set up basic logging before importing anything else
 logging.basicConfig(
     level=logging.INFO,

@@ -1,12 +1,18 @@
-"""Application configuration using Pydantic settings."""
+"""Application configuration using JSON config file."""
 
+import os
+import sys
+import json
 from pathlib import Path
 from typing import Optional
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import BaseModel, Field, ConfigDict
 
 
-class Settings(BaseSettings):
-    """Application settings with environment variable support."""
+class Settings(BaseModel):
+    """Application settings loaded from config.json."""
+    
+    # Disable environment variable loading
+    model_config = ConfigDict(extra='ignore')
     
     # Application
     app_name: str = "JIRA Logger"
@@ -16,11 +22,11 @@ class Settings(BaseSettings):
     # JIRA Configuration
     jira_domain: str = "https://jira.critical.pt"
     jira_pat: Optional[str] = None
-    jira_max_results: int = 100
+    jira_max_results: int = 500
     jira_timeout: int = 30
     
     # Excel Configuration
-    default_excel_path: str = "/mnt/c/Users/peserrano/OneDrive - CRITICAL SOFTWARE, S.A/BSP_G2/BSP-G2_Daily_Tracker.xlsx"
+    default_excel_path: str = ""
     excel_sheet_name: str = "Daily"
     
     # API Configuration
@@ -34,14 +40,39 @@ class Settings(BaseSettings):
     # Logging
     log_level: str = "INFO"
     log_format: str = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+
+
+def load_settings() -> Settings:
+    """Load settings from config.json file."""
+    # Clear any JIRA environment variables to prevent override
+    for key in list(os.environ.keys()):
+        if key.startswith('JIRA_'):
+            del os.environ[key]
+            print(f"Cleared environment variable: {key}")
     
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        case_sensitive=False,
-        extra="ignore"
-    )
+    # Determine config file location
+    if getattr(sys, 'frozen', False):
+        # Running as compiled exe - look in same directory as exe
+        app_dir = Path(sys.executable).parent
+    else:
+        # Running as script - look in project root
+        app_dir = Path(__file__).parent.parent.parent
+    
+    config_path = app_dir / "config.json"
+    print(f"Loading config from: {config_path}")
+    
+    if config_path.exists():
+        with open(config_path, 'r', encoding='utf-8') as f:
+            config_data = json.load(f)
+        settings = Settings(**config_data)
+        print(f"Settings loaded - JIRA_DOMAIN: {settings.jira_domain}")
+        print(f"Settings loaded - JIRA_PAT: {settings.jira_pat[:20] + '...' if settings.jira_pat else 'NONE!'}")
+        return settings
+    else:
+        print(f"Config file not found at: {config_path}")
+        # Return settings with defaults
+        return Settings()
 
 
 # Global settings instance
-settings = Settings()
+settings = load_settings()

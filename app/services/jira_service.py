@@ -22,6 +22,10 @@ class JiraService:
         self.domain = settings.jira_domain
         self.timeout = settings.jira_timeout
         
+        # Debug logging
+        logger.info(f"JiraService initialized with domain: {self.domain}")
+        logger.info(f"JiraService PAT (first 20 chars): {self.pat[:20] if self.pat else 'NONE'}...")
+        
         if not self.pat:
             raise AuthenticationException("JIRA PAT is required")
     

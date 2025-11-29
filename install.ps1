@@ -88,21 +88,16 @@ $npmVersion = npm --version 2>&1
 Write-Status "Found: npm v$npmVersion" "Success"
 Write-Host ""
 
-# Set up .env file
-Write-Status "Setting up environment configuration..."
-if (-not (Test-Path ".env")) {
-    if (Test-Path ".env.example") {
-        Copy-Item ".env.example" ".env"
-        Write-Status "Created .env file from .env.example" "Success"
-        Write-Host ""
-        Write-Host "⚠️  IMPORTANT: Edit .env file and set your JIRA_PAT!" -ForegroundColor Yellow
-        Write-Host "   Open .env in Notepad and replace 'your-personal-access-token-here'" -ForegroundColor Yellow
-        Write-Host ""
-    } else {
-        Write-Status ".env.example file not found. You'll need to create .env manually." "Warning"
-    }
+# Set up config.json file
+Write-Status "Setting up configuration file..."
+if (-not (Test-Path "config.json")) {
+    Write-Status "config.json will be created automatically on first run" "Success"
+    Write-Host ""
+    Write-Host "⚠️  IMPORTANT: Edit config.json file and set your jira_pat!" -ForegroundColor Yellow
+    Write-Host "   The app will create a template config.json on first startup" -ForegroundColor Yellow
+    Write-Host ""
 } else {
-    Write-Status ".env file already exists (skipping)" "Success"
+    Write-Status "config.json file already exists (skipping)" "Success"
 }
 
 # Create Python virtual environment
@@ -224,9 +219,10 @@ Write-Host ""
 # Final instructions
 Write-Host "Next steps:" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "1. Edit the .env file and set your JIRA Personal Access Token:" -ForegroundColor White
-Write-Host "   - Open .env in Notepad" -ForegroundColor Gray
-Write-Host "   - Find: JIRA_PAT=your-personal-access-token-here" -ForegroundColor Gray
+Write-Host "1. Edit the config.json file and set your JIRA Personal Access Token:" -ForegroundColor White
+Write-Host "   - Run the app once to create config.json template" -ForegroundColor Gray
+Write-Host "   - Open config.json in Notepad" -ForegroundColor Gray
+Write-Host "   - Find: \"jira_pat\": \"your-personal-access-token\"" -ForegroundColor Gray
 Write-Host "   - Replace with your actual JIRA token" -ForegroundColor Gray
 Write-Host ""
 Write-Host "2. Run the application:" -ForegroundColor White
@@ -236,11 +232,11 @@ Write-Host "3. Open your browser to:" -ForegroundColor White
 Write-Host "   http://localhost:5173" -ForegroundColor Yellow
 Write-Host ""
 
-# Check if .env needs configuration
-if (Test-Path ".env") {
-    $envContent = Get-Content ".env" -Raw
-    if ($envContent -match "your-personal-access-token-here") {
-        Write-Host "[!] WARNING: You still need to configure your JIRA token in .env!" -ForegroundColor Yellow
+# Check if config.json needs configuration
+if (Test-Path "config.json") {
+    $configContent = Get-Content "config.json" -Raw
+    if ($configContent -match '"your-personal-access-token"') {
+        Write-Host "[!] WARNING: You still need to configure your JIRA token in config.json!" -ForegroundColor Yellow
         Write-Host ""
     }
 }

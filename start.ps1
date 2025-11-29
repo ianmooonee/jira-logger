@@ -7,20 +7,16 @@ Write-Host "==================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Check if this is first run
-$envExists = Test-Path ".env"
+$configExists = Test-Path "config.json"
 $nodeModulesExists = Test-Path "frontend/node_modules"
 $venvExists = Test-Path "venv"
 
-if (-not $envExists) {
+if (-not $configExists) {
     Write-Host "[!] First time setup detected" -ForegroundColor Yellow
     Write-Host ""
-    
-    # Setup .env
-    if (Test-Path ".env.example") {
-        Write-Host "[1/3] Creating .env file..." -ForegroundColor Green
-        Copy-Item ".env.example" ".env"
-        Write-Host "    ✓ .env created. Please edit it with your JIRA PAT!" -ForegroundColor Green
-    }
+    Write-Host "[Note] config.json will be created automatically on first run" -ForegroundColor Green
+    Write-Host "       Please edit it with your JIRA PAT after first startup!" -ForegroundColor Green
+    Write-Host ""
     
     # Setup Python venv
     if (-not $venvExists) {
@@ -47,24 +43,26 @@ if (-not $nodeModulesExists) {
     Write-Host ""
 }
 
-# Check .env configuration
-Write-Host "[→] Checking configuration..." -ForegroundColor Cyan
-$envContent = Get-Content ".env" -Raw
-if ($envContent -match "your-personal-access-token-here") {
-    Write-Host ""
-    Write-Host "⚠️  WARNING: Default JIRA_PAT detected!" -ForegroundColor Yellow
-    Write-Host "   Please edit .env and add your actual JIRA Personal Access Token" -ForegroundColor Yellow
-    Write-Host ""
-    $continue = Read-Host "Continue anyway? (y/n)"
-    if ($continue -ne "y") {
-        Write-Host "Exiting. Please configure .env first." -ForegroundColor Red
-        exit
+# Check config.json configuration
+if (Test-Path "config.json") {
+    Write-Host "[→] Checking configuration..." -ForegroundColor Cyan
+    $configContent = Get-Content "config.json" -Raw
+    if ($configContent -match '"your-personal-access-token"') {
+        Write-Host ""
+        Write-Host "⚠️  WARNING: Default jira_pat detected!" -ForegroundColor Yellow
+        Write-Host "   Please edit config.json and add your actual JIRA Personal Access Token" -ForegroundColor Yellow
+        Write-Host ""
+        $continue = Read-Host "Continue anyway? (y/n)"
+        if ($continue -ne "y") {
+            Write-Host "Exiting. Please configure config.json first." -ForegroundColor Red
+            exit
+        }
     }
 }
 
-# Clear any existing JIRA_PAT environment variable to ensure .env is used
+# Clear any existing JIRA_PAT environment variable to ensure config.json is used
 if ($env:JIRA_PAT) {
-    Write-Host "[→] Clearing existing JIRA_PAT environment variable (using .env instead)..." -ForegroundColor Cyan
+    Write-Host "[→] Clearing existing JIRA_PAT environment variable (using config.json instead)..." -ForegroundColor Cyan
     $env:JIRA_PAT = $null
 }
 
