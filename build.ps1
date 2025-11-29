@@ -50,7 +50,7 @@ if ($Dev) {
 block_cipher = None
 
 a = Analysis(
-    ['app/main.py'],
+    ['main_standalone.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -65,6 +65,7 @@ a = Analysis(
         'uvicorn.protocols.websockets.auto',
         'uvicorn.lifespan',
         'uvicorn.lifespan.on',
+        'uvicorn.server',
         'pydantic',
         'pydantic_core',
         'openpyxl',
