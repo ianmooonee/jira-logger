@@ -1,6 +1,6 @@
 {
   "name": "jira-logger-desktop",
-  "version": "2.0.1",
+  "version": "2.0.0",
   "description": "JIRA Logger Desktop Application",
   "main": "main.js",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "build": {
     "appId": "com.jiralogger.app",
-    "productName": "JIRA Logger",
+    "productName": "JIRALogger",
     "directories": {
       "output": "dist"
     },
