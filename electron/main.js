@@ -140,11 +140,26 @@ function createWindow() {
     mainWindow.show();
   });
 
-  mainWindow.on('closed', () => {
-    if (backendProcess) {
-      backendProcess.kill();
+  // Kill backend BEFORE window closes (when X is clicked)
+  mainWindow.on('close', (event) => {
+    if (backendProcess && !backendProcess.killed) {
+      console.log('Killing backend process...');
+      // On Windows, need to kill the process tree forcefully
+      if (process.platform === 'win32') {
+        const { execSync } = require('child_process');
+        try {
+          execSync(`taskkill /pid ${backendProcess.pid} /T /F`, { stdio: 'ignore' });
+        } catch (e) {
+          console.error('Error killing backend:', e);
+        }
+      } else {
+        backendProcess.kill('SIGTERM');
+      }
       backendProcess = null;
     }
+  });
+
+  mainWindow.on('closed', () => {
     mainWindow = null;
   });
 }
